@@ -45,10 +45,12 @@ class QuestionnaireRoot
         return $progress;
     }
 
-    public function addQuestion(string $id, string $question, array $answerOptions): void
+    public function addQuestion(string $id, string $question, array $answerOptions): QuestionWithAnswers
     {
         $questionWithAnswers = QuestionWithAnswers::loadData($this, $id, $question, $answerOptions);
         $this->questions->add($questionWithAnswers);
+
+        return $questionWithAnswers;
     }
 
     /**

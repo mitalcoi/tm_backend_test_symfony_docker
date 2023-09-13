@@ -13,9 +13,10 @@ class AppFixtures extends Fixture
     {
         $samples = json_decode(file_get_contents(__DIR__.'/test_samples.json'));
         $root =new QuestionnaireRoot();
-
+        $i = 0;
         foreach ($samples as $question => $answerOptions) {
-            $root->addQuestion(uuid_create(), $question, $answerOptions);
+           $this->addReference('question_'.$i, $root->addQuestion(uuid_create(), $question, $answerOptions));
+           $i++;
         }
         $manager->persist($root);
         $manager->flush();
