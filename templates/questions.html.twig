@@ -1,0 +1,12 @@
+{% extends "base.html.twig" %}
+{% block body %}
+    {% for question in questions %}
+        <div>
+            <label for={{ question.id }}>
+                <div>{{ question.question }}</div>
+                <input id={{question.id}} type="text">
+            </label>
+            {{ dump(question.answerOptions) }}
+        </div>
+    {% endfor %}
+{% endblock %}
