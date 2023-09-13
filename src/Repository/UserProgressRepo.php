@@ -9,7 +9,7 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class UserProgressRepo extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, private QuestionnaireRootRepo $questionnaireRootRepo)
     {
         parent::__construct($registry, UserProgress::class);
     }
@@ -19,8 +19,8 @@ class UserProgressRepo extends ServiceEntityRepository
         if ($progress = $this->findOneBy(['id' => $sessionRef])) {
             return $progress;
         } else {
-            $progress = UserProgress::create($sessionRef);
-            $this->getEntityManager()->persist($progress);
+            $root = $this->questionnaireRootRepo->getRoot();
+            $progress = $root->addUserProgress($sessionRef);
             if ($flush) {
                 $this->getEntityManager()->flush();
             }

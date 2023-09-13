@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\ManyToOne;
 
 #[Entity]
 class QuestionWithAnswers
@@ -12,6 +13,8 @@ class QuestionWithAnswers
     private function __construct(
         #[Id, Column(type: 'guid')]
         private string $id,
+        #[ManyToOne(targetEntity: QuestionnaireRoot::class, inversedBy: 'questions')]
+        private QuestionnaireRoot $root,
         #[Column(type: 'string')]
         private string $question,
         #[Column(type: 'json')]
@@ -19,9 +22,9 @@ class QuestionWithAnswers
     ) {
     }
 
-    public static function loadData(string $id, string $question, array $answerOptions): QuestionWithAnswers
+    public static function loadData(QuestionnaireRoot $root, string $id, string $question, array $answerOptions): QuestionWithAnswers
     {
-        return new QuestionWithAnswers($id, $question, $answerOptions);
+        return new QuestionWithAnswers($id, $root, $question, $answerOptions);
     }
 
     /**
@@ -46,6 +49,14 @@ class QuestionWithAnswers
     public function getAnswerOptions(): array
     {
         return $this->answerOptions;
+    }
+
+    /**
+     * @return QuestionnaireRoot
+     */
+    public function getRoot(): QuestionnaireRoot
+    {
+        return $this->root;
     }
 
 

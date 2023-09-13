@@ -1,12 +1,37 @@
 {% extends "base.html.twig" %}
 {% block body %}
-    {% for question in questions %}
-        <div>
-            <label for={{ question.id }}>
-                <div>{{ question.question }}</div>
-                <input id={{question.id}} type="text">
+    {% if myProgress.isFinished %}
+        Test finished at {{ myProgress.finishedAt|date }}
+        <table>
+            <tr>
+                <th>Question</th>
+                <th>Answer</th>
+                <th>Is Correct?</th>
+            </tr>
+
+            {% for progress in myProgress.progressTracks %}
+                <tr>
+                    <td>{{ progress.question.question }}</td>
+                    <td>{{ progress.userAnswers|join("; ") }}</td>
+                    <td style="color:{{ progress.correct ? 'green' : 'red' }}">{{ progress.correct ? 'YES' : 'NO' }}</td>
+                </tr>
+            {% endfor %}
+            <form method="POST" action="{{ path('app_reset_progress') }}">
+                <button type="submit">Reset progress</button>
+            </form>
+
+        </table>
+    {% else %}
+        <form method="POST" action="{{ path('app_answer', {'question': myProgress.upcomingQuestion.id}) }}">
+            <label for={{ myProgress.upcomingQuestion.id }}>
+                <div>{{ myProgress.upcomingQuestion.question }}</div>
+                {% for option in myProgress.upcomingQuestion.answerOptions %}
+                    <input name="answers[]" type="checkbox" value="{{ option }}"/>{{ option }}
+                {% endfor %}
             </label>
-            {{ dump(question.answerOptions) }}
-        </div>
-    {% endfor %}
+            <hr/>
+            <button type="submit">Answer and go next</button>
+        </form>
+        Questions to finish test: {{ myProgress.leftToFinish }}
+    {% endif %}
 {% endblock %}
