@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Service;
+namespace App\Tests;
 
+use App\Service\QuestionnaireAnswerEngine;
 use PHPUnit\Framework\TestCase;
 
-class QuestionnaireAnswerEngineTest extends TestCase
+class QuestionnaireAnswerEngineUnitTest extends TestCase
 {
 
     public function testHandleMathAnswer()
